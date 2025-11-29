@@ -387,7 +387,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                             endTime: endTimeStr,
                             amount: widget.pricePerHour,
                             status: 'pending',
-                            paymentStatus: 'pending',
+                            // paymentStatus is computed from esewaStatus on Booking
                             createdAt: Timestamp.now(),
                             holdExpiresAt: Timestamp.fromDate(DateTime.now().add(const Duration(minutes: 5))),
                           );
