@@ -38,30 +38,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   }
 
 
-  late List<OnboardingItem> _items;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _items = [
-      OnboardingItem(
-        title: 'Find Perfect Courts',
-        description: 'Discover the best futsal courts near you with just a few taps.',
-        visual: _buildLocationVisual(),
-      ),
-      OnboardingItem(
-        title: 'Book Instantly',
-        description: 'Secure your spot in seconds. No more phone calls or waiting.',
-        visual: _buildBookingVisual(),
-      ),
-      OnboardingItem(
-        title: 'Play & Compete',
-        description: 'Join the community, challenge teams, and enjoy the game.',
-        visual: _buildCommunityVisual(),
-      ),
-    ];
-  }
->>>>>>> d48241cca8b480696e6dc6ab15cd70d88da1ca73
+  
 
   @override
   Widget build(BuildContext context) {
