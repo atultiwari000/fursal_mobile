@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme.dart';
 
@@ -17,12 +16,14 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   final List<OnboardingItem> _items = [
     OnboardingItem(
       title: 'Find Perfect Courts',
-      description: 'Discover the best futsal courts near you with just a few taps.',
+      description:
+          'Discover the best futsal courts near you with just a few taps.',
       icon: Icons.location_on_outlined,
     ),
     OnboardingItem(
       title: 'Book Instantly',
-      description: 'Secure your spot in seconds. No more phone calls or waiting.',
+      description:
+          'Secure your spot in seconds. No more phone calls or waiting.',
       icon: Icons.calendar_today_outlined,
     ),
     OnboardingItem(
@@ -35,7 +36,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
@@ -96,7 +97,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     ),
                   ),
                 ),
-                
+
                 Expanded(
                   flex: 3,
                   child: PageView.builder(
@@ -140,7 +141,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: theme.primaryColor.withOpacity(0.1),
+                                        color:
+                                            theme.primaryColor.withOpacity(0.1),
                                         blurRadius: 20,
                                         offset: const Offset(0, 10),
                                       ),

@@ -251,7 +251,7 @@ class VenueDetailScreen extends ConsumerWidget {
                                       urlTemplate:
                                           'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                       userAgentPackageName:
-                                          'com.example.fursal_mobile',
+                                          'com.example.tournament',
                                     ),
                                     MarkerLayer(
                                       markers: [

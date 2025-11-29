@@ -47,39 +47,6 @@ class _VenueListScreenState extends ConsumerState<VenueListScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Color(0xFF00C853), // Green color from logo
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.flash_on, color: Colors.white, size: 20),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              'Fursal',
-              style: TextStyle(
-                color: Color(0xFF00C853),
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.black),
-            onPressed: () {
-              // Open drawer or menu if needed
-            },
-          ),
-        ],
-      ),
       body: Column(
         children: [
           // Toggle Buttons

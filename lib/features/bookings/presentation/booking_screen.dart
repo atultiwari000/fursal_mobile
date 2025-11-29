@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme.dart';
 
 class BookingScreen extends StatelessWidget {
   const BookingScreen({super.key});
