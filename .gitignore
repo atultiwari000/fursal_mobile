@@ -57,3 +57,5 @@ macos/Runner/GoogleService-Info.plist
 # Local configuration
 local.properties
 **/local.properties
+
+.vscode/
