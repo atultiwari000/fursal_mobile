@@ -10,9 +10,10 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final venuesAsync = ref.watch(venuesProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -27,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: theme.cardColor,
                   contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 ),
               ),
@@ -37,16 +38,16 @@ class HomeScreen extends ConsumerWidget {
           venuesAsync.when(
             data: (venues) {
               if (venues.isEmpty) {
-                return const SliverFillRemaining(
+                return SliverFillRemaining(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.sports_soccer, size: 64, color: Colors.grey),
-                        SizedBox(height: 16),
+                        Icon(Icons.sports_soccer, size: 64, color: theme.disabledColor),
+                        const SizedBox(height: 16),
                         Text(
                           'No venues found',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          style: theme.textTheme.titleLarge?.copyWith(color: theme.disabledColor),
                         ),
                       ],
                     ),

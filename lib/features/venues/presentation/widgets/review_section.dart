@@ -78,7 +78,7 @@ class ReviewSection extends ConsumerWidget {
                               index < averageRating.round() 
                                   ? Icons.star_rounded 
                                   : Icons.star_outline_rounded,
-                              color: Colors.amber,
+                              color: AppTheme.secondaryColor,
                               size: 20,
                             );
                           }),

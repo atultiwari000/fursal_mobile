@@ -14,8 +14,10 @@ class ManagerHomeScreen extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
     final userId = authState.value?.uid;
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       // AppBar is handled by ManagerScaffoldWithNavBar
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -23,7 +25,8 @@ class ManagerHomeScreen extends ConsumerWidget {
         },
         label: const Text('Add Venue'),
         icon: const Icon(Icons.add),
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: theme.primaryColor,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
       body: venuesAsync.when(
         data: (venues) {
@@ -31,20 +34,20 @@ class ManagerHomeScreen extends ConsumerWidget {
           final myVenues = venues.where((v) => v.managedBy == userId).toList();
 
           if (myVenues.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.store_mall_directory_outlined, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  Icon(Icons.store_mall_directory_outlined, size: 64, color: AppTheme.textSecondary),
+                  const SizedBox(height: 16),
                   Text(
                     'No venues managed yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: theme.textTheme.titleLarge?.copyWith(color: AppTheme.textSecondary),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Add your first venue to get started',
-                    style: TextStyle(color: Colors.grey),
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ],
               ),

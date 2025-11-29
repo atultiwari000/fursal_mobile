@@ -29,46 +29,47 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final venueSlotsAsync = ref.watch(venueSlotsProvider(widget.venueId));
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           widget.venueName,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: theme.appBarTheme.titleTextStyle,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => context.pop(),
         ),
       ),
       body: venueSlotsAsync.when(
         data: (venueSlots) {
           if (venueSlots == null) {
-            return const Center(child: Text('No slot configuration found for this venue.'));
+            return Center(child: Text('No slot configuration found for this venue.', style: theme.textTheme.bodyLarge));
           }
           return Column(
             children: [
-              _buildDateSelector(),
+              _buildDateSelector(theme),
               Expanded(
-                child: _buildSlotsGrid(venueSlots),
+                child: _buildSlotsGrid(venueSlots, theme),
               ),
-              _buildBottomBar(),
+              _buildBottomBar(theme),
             ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => Center(child: Text('Error: $err', style: TextStyle(color: theme.colorScheme.error))),
       ),
     );
   }
 
-  Widget _buildDateSelector() {
+  Widget _buildDateSelector(ThemeData theme) {
     return Container(
       height: 100,
-      color: Colors.white,
+      color: theme.cardColor,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -88,15 +89,15 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
               width: 60,
               margin: const EdgeInsets.only(right: 12),
               decoration: BoxDecoration(
-                color: isSelected ? AppTheme.primaryColor : Colors.white,
+                color: isSelected ? theme.primaryColor : theme.cardColor,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isSelected ? AppTheme.primaryColor : Colors.grey[300]!,
+                  color: isSelected ? theme.primaryColor : Colors.grey.shade200,
                 ),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
+                          color: theme.primaryColor.withOpacity(0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         )
@@ -109,7 +110,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                   Text(
                     DateFormat('EEE').format(date),
                     style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey[600],
+                      color: isSelected ? Colors.white : AppTheme.textSecondary,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -118,7 +119,7 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                   Text(
                     DateFormat('d').format(date),
                     style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.black87,
+                      color: isSelected ? Colors.white : AppTheme.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -132,24 +133,20 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
     );
   }
 
-  Widget _buildSlotsGrid(VenueSlotData venueSlots) {
+  Widget _buildSlotsGrid(VenueSlotData venueSlots, ThemeData theme) {
     final slots = _generateSlots(venueSlots.config);
     final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
 
     if (slots.isEmpty) {
-      return const Center(child: Text('No slots available for this day.'));
+      return Center(child: Text('No slots available for this day.', style: theme.textTheme.bodyLarge));
     }
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
+        Text(
           'Available Slots',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: theme.textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
         GridView.builder(
@@ -167,16 +164,16 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
             final status = _getSlotStatus(venueSlots, dateStr, time);
             final isSelected = _selectedSlotTime == time;
 
-            return _buildSlotItem(time, status, isSelected);
+            return _buildSlotItem(time, status, isSelected, theme);
           },
         ),
         const SizedBox(height: 24),
-        _buildLegend(),
+        _buildLegend(theme),
       ],
     );
   }
 
-  Widget _buildSlotItem(String time, SlotStatus status, bool isSelected) {
+  Widget _buildSlotItem(String time, SlotStatus status, bool isSelected, ThemeData theme) {
     final isAvailable = status == SlotStatus.available;
     
     Color backgroundColor;
@@ -185,42 +182,42 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
     IconData? icon;
 
     if (isSelected) {
-      backgroundColor = AppTheme.primaryColor;
+      backgroundColor = theme.primaryColor;
       textColor = Colors.white;
-      borderColor = AppTheme.primaryColor;
+      borderColor = theme.primaryColor;
     } else {
       switch (status) {
         case SlotStatus.available:
-          backgroundColor = Colors.white;
-          textColor = Colors.black87;
-          borderColor = Colors.grey[300]!;
+          backgroundColor = theme.cardColor;
+          textColor = AppTheme.textPrimary;
+          borderColor = Colors.grey.shade200;
           break;
         case SlotStatus.bookedWebsite:
-          backgroundColor = Colors.red[50]!;
-          textColor = Colors.red[300]!;
-          borderColor = Colors.red[100]!;
+          backgroundColor = AppTheme.errorColor.withOpacity(0.1);
+          textColor = AppTheme.errorColor;
+          borderColor = AppTheme.errorColor.withOpacity(0.2);
           icon = Icons.language;
           break;
         case SlotStatus.bookedPhysical:
-          backgroundColor = Colors.red[50]!;
-          textColor = Colors.red[300]!;
-          borderColor = Colors.red[100]!;
+          backgroundColor = AppTheme.errorColor.withOpacity(0.1);
+          textColor = AppTheme.errorColor;
+          borderColor = AppTheme.errorColor.withOpacity(0.2);
           icon = Icons.person;
           break;
         case SlotStatus.held:
-          backgroundColor = Colors.orange[50]!;
-          textColor = Colors.orange[300]!;
-          borderColor = Colors.orange[100]!;
+          backgroundColor = AppTheme.secondaryColor.withOpacity(0.1);
+          textColor = AppTheme.secondaryColor;
+          borderColor = AppTheme.secondaryColor.withOpacity(0.2);
           break;
         case SlotStatus.blocked:
-          backgroundColor = Colors.grey[200]!;
-          textColor = Colors.grey[400]!;
-          borderColor = Colors.grey[300]!;
+          backgroundColor = Colors.grey.shade100;
+          textColor = Colors.grey.shade400;
+          borderColor = Colors.grey.shade200;
           break;
         case SlotStatus.reserved:
-          backgroundColor = Colors.blue[50]!;
-          textColor = Colors.blue[300]!;
-          borderColor = Colors.blue[100]!;
+          backgroundColor = Colors.purple.shade50;
+          textColor = Colors.purple.shade300;
+          borderColor = Colors.purple.shade100;
           break;
       }
     }
@@ -262,23 +259,23 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
     );
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend(ThemeData theme) {
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 16,
       runSpacing: 8,
       children: [
-        _buildLegendItem('Available', Colors.white, Colors.grey[300]!),
-        _buildLegendItem('Selected', AppTheme.primaryColor, AppTheme.primaryColor),
-        _buildLegendItem('Online', Colors.red[50]!, Colors.red[100]!, icon: Icons.language),
-        _buildLegendItem('Physical', Colors.red[50]!, Colors.red[100]!, icon: Icons.person),
-        _buildLegendItem('Held', Colors.orange[50]!, Colors.orange[100]!),
-        _buildLegendItem('Reserved', Colors.blue[50]!, Colors.blue[100]!),
+        _buildLegendItem('Available', theme.cardColor, Colors.grey.shade200),
+        _buildLegendItem('Selected', theme.primaryColor, theme.primaryColor),
+        _buildLegendItem('Online', AppTheme.errorColor.withOpacity(0.1), AppTheme.errorColor.withOpacity(0.2), icon: Icons.language, iconColor: AppTheme.errorColor),
+        _buildLegendItem('Physical', AppTheme.errorColor.withOpacity(0.1), AppTheme.errorColor.withOpacity(0.2), icon: Icons.person, iconColor: AppTheme.errorColor),
+        _buildLegendItem('Held', AppTheme.secondaryColor.withOpacity(0.1), AppTheme.secondaryColor.withOpacity(0.2)),
+        // _buildLegendItem('Reserved', Colors.purple.shade50, Colors.purple.shade100),
       ],
     );
   }
 
-  Widget _buildLegendItem(String label, Color color, Color borderColor, {IconData? icon}) {
+  Widget _buildLegendItem(String label, Color color, Color borderColor, {IconData? icon, Color? iconColor}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -291,28 +288,28 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
             border: Border.all(color: borderColor),
           ),
           child: icon != null 
-            ? Icon(icon, size: 12, color: Colors.red[300]) 
+            ? Icon(icon, size: 12, color: iconColor) 
             : null,
         ),
         const SizedBox(width: 6),
-                Text(
+        Text(
           label,
-          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+          style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
         ),
       ],
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar(ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: theme.cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 20,
-            offset: Offset(0, -5),
+            offset: const Offset(0, -5),
           ),
         ],
       ),
@@ -323,19 +320,15 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Total Price',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
+                  style: theme.textTheme.bodySmall,
                 ),
                 Text(
                   'Rs. ${widget.pricePerHour.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 20,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.primaryColor,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
                   ),
                 ),
               ],
@@ -352,8 +345,8 @@ class _SlotSelectionScreenState extends ConsumerState<SlotSelectionScreen> {
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  disabledBackgroundColor: Colors.grey[300],
+                  backgroundColor: theme.primaryColor,
+                  disabledBackgroundColor: Colors.grey.shade300,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
