@@ -42,7 +42,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-            onPressed: () {},
+            onPressed: () => context.push('/notifications'),
           ),
           const SizedBox(width: 8),
         ],

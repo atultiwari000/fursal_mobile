@@ -11,6 +11,8 @@ import '../features/home/presentation/home_screen.dart';
 import '../features/manager/presentation/manager_bookings_screen.dart';
 import '../features/manager/presentation/manager_home_screen.dart';
 import '../features/manager/presentation/manager_profile_screen.dart';
+import '../features/notifications/presentation/notification_screen.dart';
+import '../features/profile/presentation/edit_profile_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/venues/presentation/venue_detail_screen.dart';
 import '../features/venues/presentation/venue_list_screen.dart';
@@ -52,6 +54,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const NotificationScreen(),
       ),
       // Manager Shell Route
       StatefulShellRoute.indexedStack(
@@ -153,6 +160,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const EditProfileScreen(),
+                  ),
+                ],
               ),
             ],
           ),
