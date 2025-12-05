@@ -39,6 +39,7 @@ class FursalApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'SajiloKhel',
       theme: AppTheme.lightTheme,
+      themeMode: ThemeMode.light,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
