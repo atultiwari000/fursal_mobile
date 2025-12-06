@@ -143,7 +143,6 @@ class BookingRepository {
     return _firestore
         .collection('bookings')
         .where('venueId', whereIn: venueIds)
-        .orderBy('date', descending: true)
         // Note: orderBy might require composite index if filtering by venueId
         // If index missing, it will throw an error with a link to create it.
         // We might need to sort client side if we don't want to create index.
